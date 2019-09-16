@@ -78,16 +78,19 @@ public class TouchManager : MonoBehaviour
 
         else if (isPlanePlaced)
         {
-            for (var i = 0; i < Input.touchCount; ++i)
+            if(Input.touchCount > 0)
             {
-                if (Input.GetTouch(i).phase == TouchPhase.Began)
+                if (Input.GetTouch(0).phase == TouchPhase.Ended)
                 {
-                    Ray ray = arCamera.ScreenPointToRay(Input.GetTouch(i).position);
+                    Ray ray = arCamera.ScreenPointToRay(Input.GetTouch(0).position);
                     RaycastHit hitInfo;
 
                     if (Physics.Raycast(ray, out hitInfo, layerMask))
                     {
-                        placedObject = Instantiate(objectToRaycastPrefab, hitInfo.point, Quaternion.identity);
+                        if(hitInfo.collider.tag != "Cube")
+                        {
+                            placedObject = Instantiate(objectToRaycastPrefab, hitInfo.point, Quaternion.identity);
+                        }
                     }
                 }
             }
