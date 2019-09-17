@@ -11,6 +11,7 @@ public class TouchManager : MonoBehaviour
     public GameObject objectToRaycastPrefab;
     public Camera arCamera;
     public GameObject lineRendererPrefab;
+    public GameObject wallPrefab;
 
     private List<ARRaycastHit> hitsAR = new List<ARRaycastHit>();
     private RaycastHit hits;
@@ -101,32 +102,37 @@ public class TouchManager : MonoBehaviour
                         var gameObject = Instantiate(objectToRaycastPrefab, hitInfo.point, Quaternion.identity);
                         listOfPlacedObjects.Add(gameObject);
                         //DrawLinesBetweenObjects();
-                        DrawWallsBetweenObjects();
+                        DrawWallBetweenObjects();
                     }
                 }
             }
         }
     }
 
-    private void DrawWallsBetweenObjects()
+    public Vector3 FindPerpendicularAngle(Vector3 pos1, Vector3 pos2)
+    {
+        var temp = Quaternion.LookRotation(pos2 - pos1).eulerAngles;
+        return new Vector3(temp.x, temp.y + 90f, temp.z);
+    }
+
+    private void DrawWallBetweenObjects()
     {
         int lengthOfList = listOfPlacedObjects.Count;
         if (lengthOfList == 2)
         {
-            // draw a line between 2 points to start w
+            var A = listOfPlacedObjects[0].transform;
+            var B = listOfPlacedObjects[1].transform;
 
-            // get vector3 between the two points
+            var vector_AB = B.position - A.position;
+            var length_AB = vector_AB.magnitude;
 
-            // get the vectors magnitude
+            Debug.Log("Length vector: " + length_AB);
 
-            // instantiate quad
+            Quaternion rotation = Quaternion.LookRotation(vector_AB);
+            var wall = Instantiate(wallPrefab, A.position, rotation);
             
-            // set the local width of the quad to the current magnitude
-            
-            // place the quad in line with the vector
-
-            // place the quad between the two points
-        }
+            // I need to rotate the plane 90 deg clockwise
+            }
     }
 
     private void DrawLinesBetweenObjects()
@@ -160,6 +166,7 @@ public class TouchManager : MonoBehaviour
         {
             Destroy(listOfLinerenderers[i].gameObject);
         }   listOfLinerenderers.Clear();
+
         // destroy the placed objects if any
         for (int i = 0; i < listOfPlacedObjects.Count; i++)
         {
