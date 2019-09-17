@@ -100,10 +100,32 @@ public class TouchManager : MonoBehaviour
                     {
                         var gameObject = Instantiate(objectToRaycastPrefab, hitInfo.point, Quaternion.identity);
                         listOfPlacedObjects.Add(gameObject);
-                        DrawLinesBetweenObjects();
+                        //DrawLinesBetweenObjects();
+                        DrawWallsBetweenObjects();
                     }
                 }
             }
+        }
+    }
+
+    private void DrawWallsBetweenObjects()
+    {
+        int lengthOfList = listOfPlacedObjects.Count;
+        if (lengthOfList == 2)
+        {
+            // draw a line between 2 points to start w
+
+            // get vector3 between the two points
+
+            // get the vectors magnitude
+
+            // instantiate quad
+            
+            // set the local width of the quad to the current magnitude
+            
+            // place the quad in line with the vector
+
+            // place the quad between the two points
         }
     }
 
