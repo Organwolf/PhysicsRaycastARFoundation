@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,6 @@ public class Intersect : MonoBehaviour
     // Variables
     public GameObject clickPointPrefab;
     public GameObject quad;
-    public GameObject debugWallPrefab;
     private GameObject clickPoint;
     private List<GameObject> clickedPoints = new List<GameObject>();
     //public GameObject debugWall;
@@ -16,6 +16,7 @@ public class Intersect : MonoBehaviour
     //Vector3[] fenceNormals;
 
     Plane m_Plane;
+    Plane m_Wall;
 
     // Start is called before the first frame update
     // TransformaPoint - transforms a local point to worldspace
@@ -34,6 +35,9 @@ public class Intersect : MonoBehaviour
         //}
 
     }
+
+    private bool HasSavedPoint;
+    private Vector3 savedPoint;
 
     // Update is called once per frame
     void Update()
@@ -54,25 +58,59 @@ public class Intersect : MonoBehaviour
                 //Get the point that is clicked
                 Vector3 hitPoint = ray.GetPoint(enter);
 
-                clickPoint = Instantiate(clickPointPrefab);
-                clickedPoints.Add(clickPoint);
-                clickPoint.transform.position = hitPoint;
+                clickPoint = Instantiate(clickPointPrefab, hitPoint, Quaternion.identity);
 
-                if (clickedPoints.Count == 2)
+                if(HasSavedPoint)
                 {
-                    // try to place the wall between the points
+                    createQuadFromPoints(savedPoint, hitPoint);
+                    HasSavedPoint = false;
                 }
-                //bool inside = true;
-
-                //for (int i = 0; i < fences.Length; i++)
-                //{
-                //    Vector3 hitPointToFence = fences[i].transform.position - hitPoint;
-                //    inside = inside && Vector3.Dot(fenceNormals[i], hitPointToFence) <= 0;
-                //}
-
-                //if(inside)
-                    //Move your cube GameObject to the point where you clicked
+                else
+                {
+                    savedPoint = hitPoint;
+                    HasSavedPoint = true;
+                }
             }
         }
+    }
+
+    private float height = 1;
+
+    private void createQuadFromPoints(Vector3 firstPoint, Vector3 secondPoint)
+    {
+        GameObject newMeshObject = new GameObject("wall");
+        MeshFilter newMeshFilter = newMeshObject.AddComponent<MeshFilter>();
+
+        Mesh newMesh = new Mesh();
+
+        Vector3 heightVector = new Vector3(0, height, 0);
+
+        newMesh.vertices = new Vector3[]
+        {
+            firstPoint,
+            secondPoint,
+            firstPoint + heightVector,
+            secondPoint + heightVector
+        };
+
+        newMesh.triangles = new int[]
+        {
+            0,2,1,1,2,3,
+            3,2,1,1,2,0
+        };
+
+        newMesh.RecalculateNormals();
+        newMesh.RecalculateTangents();
+        newMesh.RecalculateBounds();
+
+        newMeshFilter.mesh = newMesh;
+
+        newMeshObject.AddComponent<MeshRenderer>();
+
+        // skapa en quad från de två punkterna
+
+        // ge quaden ett visst material
+
+        // lägg in quaden i en lista - så att jag kan radera dem via en knapp
     }
 }

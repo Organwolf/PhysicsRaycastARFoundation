@@ -99,13 +99,30 @@ public class TouchManager : MonoBehaviour
 
                     if (Physics.Raycast(ray, out hitInfo, layerMask))
                     {
-                        var gameObject = Instantiate(objectToRaycastPrefab, hitInfo.point, Quaternion.identity);
-                        listOfPlacedObjects.Add(gameObject);
+                        var placedObject = Instantiate(objectToRaycastPrefab, hitInfo.point, Quaternion.identity);
+                        listOfPlacedObjects.Add(placedObject);
+
+                        // input the two vectors/points
+                        PlaceQuadBetweenPoints();
+
                         //DrawLinesBetweenObjects();
-                        DrawWallBetweenObjects();
+                        //DrawWallBetweenObjects();
                     }
                 }
             }
+        }
+    }
+
+    private void PlaceQuadBetweenPoints()
+    {
+        int lengthOfList = listOfPlacedObjects.Count;
+        if (lengthOfList == 2)
+        {
+            // skapa en quad från de två punkterna
+
+            // ge quaden ett visst material
+
+            // lägg in quaden i en lista - så att jag kan radera dem via en knapp
         }
     }
 
