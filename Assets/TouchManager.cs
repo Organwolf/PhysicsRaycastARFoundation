@@ -12,6 +12,7 @@ public class TouchManager : MonoBehaviour
     public Camera arCamera;
     public GameObject lineRendererPrefab;
     public GameObject wallPrefab;
+    public Material[] materialForWalls;
 
     private List<ARRaycastHit> hitsAR = new List<ARRaycastHit>();
     private RaycastHit hits;
@@ -131,7 +132,10 @@ public class TouchManager : MonoBehaviour
     {
         GameObject newMeshObject = new GameObject("wall");
         MeshFilter newMeshFilter = newMeshObject.AddComponent<MeshFilter>();
-
+        newMeshObject.AddComponent<MeshRenderer>();
+ 
+        // ge varje mesh ett material
+        newMeshObject.GetComponent<Renderer>().materials = materialForWalls;
         Mesh newMesh = new Mesh();
 
         Vector3 heightVector = new Vector3(0, height, 0);
@@ -155,10 +159,6 @@ public class TouchManager : MonoBehaviour
         newMesh.RecalculateBounds();
 
         newMeshFilter.mesh = newMesh;
-
-        newMeshObject.AddComponent<MeshRenderer>();
-
-        // ge varje mesh Occlusion materialet
 
         // spara undan meshen i en lista
         listOfWallMeshes.Add(newMeshObject);
