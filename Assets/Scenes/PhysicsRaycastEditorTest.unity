@@ -235,7 +235,6 @@ MonoBehaviour:
   clickPointPrefab: {fileID: 360811926989415557, guid: 49d9dd2935c9a2141a8db5543d127e83,
     type: 3}
   quad: {fileID: 1893104962}
-  debugWallPrefab: {fileID: 0}
 --- !u!4 &934522163
 Transform:
   m_ObjectHideFlags: 0
@@ -323,20 +322,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2162950574031827636, guid: a5ad597930efe3e41a849ace0a220626,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2162950574031827636, guid: a5ad597930efe3e41a849ace0a220626,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2162950574031827639, guid: a5ad597930efe3e41a849ace0a220626,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5ad597930efe3e41a849ace0a220626, type: 3}

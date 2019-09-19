@@ -24,9 +24,9 @@ public class Intersect : MonoBehaviour
     void Start()
     {
         Vector3[] vertices = quad.GetComponent<MeshFilter>().mesh.vertices;
-        m_Plane = new Plane(quad.transform.TransformPoint(vertices[0]) + new Vector3(0, 0.3f, 0),
-                            quad.transform.TransformPoint(vertices[1]) + new Vector3(0, 0.3f, 0),
-                            quad.transform.TransformPoint(vertices[2]) + new Vector3(0, 0.3f, 0));
+        m_Plane = new Plane(quad.transform.TransformPoint(vertices[0]) + new Vector3(0, 0, 0),
+                            quad.transform.TransformPoint(vertices[1]) + new Vector3(0, 0, 0),
+                            quad.transform.TransformPoint(vertices[2]) + new Vector3(0, 0, 0));
         //fenceNormals = new Vector3[fences.Length];
         //for (int i = 0; i < fences.Length; i++)
         //{
@@ -106,11 +106,10 @@ public class Intersect : MonoBehaviour
         newMeshFilter.mesh = newMesh;
 
         newMeshObject.AddComponent<MeshRenderer>();
+        
+        // ge varje mesh Occlusion materialet
 
-        // skapa en quad från de två punkterna
+        // spara undan meshen i en lista
 
-        // ge quaden ett visst material
-
-        // lägg in quaden i en lista - så att jag kan radera dem via en knapp
     }
 }

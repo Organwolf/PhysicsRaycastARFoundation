@@ -20,6 +20,7 @@ public class TouchManager : MonoBehaviour
     private bool isPlanePlaced = false;
     private List<GameObject> listOfPlacedObjects;
     private List<GameObject> listOfLinerenderers;
+    private List<GameObject> listOfWallMeshes;
     //private LineRenderer lineRenderer;
 
     void Awake()
@@ -28,6 +29,7 @@ public class TouchManager : MonoBehaviour
         arPlaneManager = GetComponent<ARPlaneManager>();
         listOfPlacedObjects = new List<GameObject>();
         listOfLinerenderers = new List<GameObject>();
+        listOfWallMeshes = new List<GameObject>();
     }
 
     bool TryGetTouchPosition(out Touch touch)
@@ -62,6 +64,9 @@ public class TouchManager : MonoBehaviour
             plane.gameObject.SetActive(arPlaneManager.enabled);
         }
     }
+
+    private bool HasSavedPoint;
+    private Vector3 savedPoint;
 
     void Update()
     {
@@ -99,31 +104,85 @@ public class TouchManager : MonoBehaviour
 
                     if (Physics.Raycast(ray, out hitInfo, layerMask))
                     {
-                        var placedObject = Instantiate(objectToRaycastPrefab, hitInfo.point, Quaternion.identity);
-                        listOfPlacedObjects.Add(placedObject);
+                        // Visualizes the click point on the surface
+                        var clickPointObject = Instantiate(objectToRaycastPrefab, hitInfo.point, Quaternion.identity);
+                        listOfPlacedObjects.Add(clickPointObject);
 
                         // input the two vectors/points
-                        PlaceQuadBetweenPoints();
-
-                        //DrawLinesBetweenObjects();
-                        //DrawWallBetweenObjects();
+                        if (HasSavedPoint)
+                        {
+                            createQuadFromPoints(savedPoint, hitInfo.point);
+                            HasSavedPoint = false;
+                        }
+                        else
+                        {
+                            savedPoint = hitInfo.point;
+                            HasSavedPoint = true;
+                        }
                     }
                 }
             }
         }
     }
 
-    private void PlaceQuadBetweenPoints()
+    private float height = 1;
+
+    private void createQuadFromPoints(Vector3 firstPoint, Vector3 secondPoint)
     {
-        int lengthOfList = listOfPlacedObjects.Count;
-        if (lengthOfList == 2)
+        GameObject newMeshObject = new GameObject("wall");
+        MeshFilter newMeshFilter = newMeshObject.AddComponent<MeshFilter>();
+
+        Mesh newMesh = new Mesh();
+
+        Vector3 heightVector = new Vector3(0, height, 0);
+
+        newMesh.vertices = new Vector3[]
         {
-            // skapa en quad från de två punkterna
+            firstPoint,
+            secondPoint,
+            firstPoint + heightVector,
+            secondPoint + heightVector
+        };
 
-            // ge quaden ett visst material
+        newMesh.triangles = new int[]
+        {
+            0,2,1,1,2,3,
+            3,2,1,1,2,0
+        };
 
-            // lägg in quaden i en lista - så att jag kan radera dem via en knapp
-        }
+        newMesh.RecalculateNormals();
+        newMesh.RecalculateTangents();
+        newMesh.RecalculateBounds();
+
+        newMeshFilter.mesh = newMesh;
+
+        newMeshObject.AddComponent<MeshRenderer>();
+
+        // ge varje mesh Occlusion materialet
+
+        // spara undan meshen i en lista
+        listOfWallMeshes.Add(newMeshObject);
+    }
+
+    public void ClearListOfObjects()
+    {
+        // destroy linerenderers
+        for (int i = 0; i < listOfLinerenderers.Count; i++)
+        {
+            Destroy(listOfLinerenderers[i].gameObject);
+        }   listOfLinerenderers.Clear();
+
+        // destroy the placed objects if any
+        for (int i = 0; i < listOfPlacedObjects.Count; i++)
+        {
+            Destroy(listOfPlacedObjects[i].gameObject);
+        }   listOfPlacedObjects.Clear();
+
+        // destroy the gameobjects holding the wall meshes
+        for (int i = 0; i < listOfWallMeshes.Count; i++)
+        {
+            Destroy(listOfWallMeshes[i].gameObject);
+        }   listOfWallMeshes.Clear();
     }
 
     public Vector3 FindPerpendicularAngle(Vector3 pos1, Vector3 pos2)
@@ -174,20 +233,5 @@ public class TouchManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void ClearListOfObjects()
-    {
-        // destroy linerenderers
-        for (int i = 0; i < listOfLinerenderers.Count; i++)
-        {
-            Destroy(listOfLinerenderers[i].gameObject);
-        }   listOfLinerenderers.Clear();
-
-        // destroy the placed objects if any
-        for (int i = 0; i < listOfPlacedObjects.Count; i++)
-        {
-            Destroy(listOfPlacedObjects[i].gameObject);
-        }   listOfPlacedObjects.Clear();
     }
 }
