@@ -151,7 +151,7 @@ public class TouchManager : MonoBehaviour
         newMesh.triangles = new int[]
         {
             0,2,1,1,2,3,
-            3,2,1,1,2,0
+            //3,2,1,1,2,0
         };
 
         newMesh.RecalculateNormals();

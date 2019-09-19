@@ -235,6 +235,8 @@ MonoBehaviour:
   clickPointPrefab: {fileID: 360811926989415557, guid: 49d9dd2935c9a2141a8db5543d127e83,
     type: 3}
   quad: {fileID: 1893104962}
+  materialForWalls:
+  - {fileID: 2100000, guid: 560c69d63b5010549a81a590a2b6ddff, type: 2}
 --- !u!4 &934522163
 Transform:
   m_ObjectHideFlags: 0

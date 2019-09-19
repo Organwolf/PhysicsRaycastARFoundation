@@ -9,6 +9,7 @@ public class Intersect : MonoBehaviour
     // Variables
     public GameObject clickPointPrefab;
     public GameObject quad;
+    public Material[] materialForWalls;
     private GameObject clickPoint;
     private List<GameObject> clickedPoints = new List<GameObject>();
     //public GameObject debugWall;
@@ -95,7 +96,7 @@ public class Intersect : MonoBehaviour
 
         newMesh.triangles = new int[]
         {
-            0,2,1,1,2,3,
+            //0,2,1,1,2,3,
             3,2,1,1,2,0
         };
 
@@ -103,13 +104,13 @@ public class Intersect : MonoBehaviour
         newMesh.RecalculateTangents();
         newMesh.RecalculateBounds();
 
-        newMeshFilter.mesh = newMesh;
+        //newMeshFilter.mesh = newMesh;
+        newMeshObject.GetComponent<MeshFilter>().mesh = newMesh;
 
-        newMeshObject.AddComponent<MeshRenderer>();
-        
-        // ge varje mesh Occlusion materialet
+        var rend = newMeshObject.AddComponent<MeshRenderer>();
 
-        // spara undan meshen i en lista
+        //// ge varje mesh ett material
+        rend.material = materialForWalls[0];
 
     }
 }
